@@ -49,7 +49,7 @@
 
            <div id="message" class="message"></div>
            
-           <div id="history" class="history-section">
+           <div id="history" class="history-section hidden">
                <h3 class="history-title">Previous Guesses</h3>
                <div id="history-content"></div>
            </div>
@@ -290,6 +290,9 @@
        #history-content {
            max-height: 350px;
            overflow-y: auto;
+       }
+       .history-section.hidden {
+           display: none;
        }
 
        .guess-entry {
@@ -549,7 +552,7 @@
            document.getElementById('message').textContent = 'Make your first guess! You have 7 guesses including 3 range clues.';
            document.getElementById('message').className = 'message';
            document.getElementById('history-content').innerHTML = '';
-           
+           document.getElementById('history').classList.add('hidden');           
            updateUI();
             if (!isPracticeMode) {
                 document.getElementById('challenge-header').innerHTML = 'Today\'s Challenge: <span id="current-date"></span>';
@@ -760,6 +763,7 @@
            // Add to history
            const entryClass = clueType === 'range' ? 'guess-entry range-entry' : 'guess-entry';
            history.unshift(`<div class="${entryClass}">${historyEntry}</div>`);
+           document.getElementById('history').classList.remove('hidden');
            document.getElementById('history-content').innerHTML = history.join('');
            
            updateClueOptions();
