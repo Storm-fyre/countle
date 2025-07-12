@@ -439,6 +439,7 @@
        let guessCount = 0;
        let isPracticeMode = false;
        let dailyCompleted = false;
+       let dailyWon = false;
 
        const fibonacciNumbers = new Set([1, 2, 3, 5, 8, 13, 21, 34, 55, 89]);
 
@@ -497,6 +498,7 @@
                history: history,
                guessCount: guessCount,
                dailyCompleted: dailyCompleted,
+               dailyWon: dailyWon,
                isPracticeMode: isPracticeMode
            };
            localStorage.setItem('countle_daily_state', JSON.stringify(state));
@@ -518,10 +520,11 @@
                history = savedState.history;
                guessCount = savedState.guessCount;
                dailyCompleted = savedState.dailyCompleted;
+               dailyWon = savedState.dailyWon !== undefined ? savedState.dailyWon : false;
                isPracticeMode = savedState.isPracticeMode;
                
                if (dailyCompleted) {
-                   showCompletionScreen();
+                   showCompletionScreen(dailyWon);
                } else {
                    updateUI();
                    // Show history immediately if there are previous guesses
@@ -718,6 +721,7 @@
                // Game won
                if (!isPracticeMode) {
                    dailyCompleted = true;
+                   dailyWon = true;
                    saveGameState();
                    setTimeout(() => showCompletionScreen(true), 2000);
                } else {
@@ -748,6 +752,7 @@
                    // Game lost
                    if (!isPracticeMode) {
                        dailyCompleted = true;
+                       dailyWon = false;
                        saveGameState();
                        setTimeout(() => showCompletionScreen(false), 2000);
                    } else {
@@ -779,14 +784,9 @@
            document.getElementById('clue-select').selectedIndex = 0;
        }
 
-       function showCompletionScreen(won = null) {
+       function showCompletionScreen(won) {
            document.getElementById('game-screen').classList.add('hidden');
            document.getElementById('completion-screen').classList.remove('hidden');
-           
-           if (won === null) {
-               // Determine if won based on current state
-               won = document.getElementById('message').classList.contains('success');
-           }
            
            document.getElementById('completion-title').textContent = won ? '🎉 Congratulations!' : '💥 Game Over!';
            document.getElementById('completion-number').textContent = secretNumber;
