@@ -524,9 +524,21 @@
                    showCompletionScreen();
                } else {
                    updateUI();
-                    if (isPracticeMode) {
-                        document.getElementById('challenge-header').textContent = 'Practice Mode';
-                    }                   
+                   // Show history immediately if there are previous guesses
+                   if (history.length > 0) {
+                       document.getElementById('history').classList.remove('hidden');
+                   }
+                   
+                   if (isPracticeMode) {
+                       document.getElementById('challenge-header').textContent = 'Practice Mode';
+                   }
+                   
+                   // Set appropriate message based on game state
+                   if (guessCount === 0) {
+                       document.getElementById('message').textContent = 'Make your first guess! You have 7 guesses including 3 range clues.';
+                   } else {
+                       document.getElementById('message').textContent = `Continue guessing! You have ${guessesLeft} guesses left.`;
+                   }
                }
            } else {
                // Start new daily challenge
@@ -554,10 +566,11 @@
            document.getElementById('history-content').innerHTML = '';
            document.getElementById('history').classList.add('hidden');           
            updateUI();
-            if (!isPracticeMode) {
-                document.getElementById('challenge-header').innerHTML = 'Today\'s Challenge: <span id="current-date"></span>';
-                document.getElementById('current-date').textContent = formatDate();
-            }
+           
+           if (!isPracticeMode) {
+               document.getElementById('challenge-header').innerHTML = 'Today\'s Challenge: <span id="current-date"></span>';
+               document.getElementById('current-date').textContent = formatDate();
+           }
        }
 
        function updateUI() {
@@ -565,8 +578,11 @@
            updateRangeDisplay();
            updateClueOptions();
            
-           // Restore history
-           document.getElementById('history-content').innerHTML = history.join('');
+           // Restore history immediately
+           if (history.length > 0) {
+               document.getElementById('history-content').innerHTML = history.join('');
+               document.getElementById('history').classList.remove('hidden');
+           }
            
            // Show game screen, hide completion screen
            document.getElementById('game-screen').classList.remove('hidden');
@@ -606,38 +622,23 @@
        function getClue(number, clueType) {
            switch (clueType) {
                case 'parity': 
-                   return `The number is ${number % 2 === 0 ? 'even' : 'odd'}.`;
+                   return `The number is ${number % 2 === 0 ? 'even' : 'odd'}`;
                case 'div3': 
-                   return `The number is ${number % 3 === 0 ? '' : 'not '}divisible by 3.`;
+                   return `The number is ${number % 3 === 0 ? '' : 'not '}divisible by 3`;
                case 'div5': 
-                   return `The number is ${number % 5 === 0 ? '' : 'not '}divisible by 5.`;
+                   return `The number is ${number % 5 === 0 ? '' : 'not '}divisible by 5`;
                case 'prime': 
-                   return `The number is ${isPrime(number) ? '' : 'not '}a prime number.`;
+                   return `The number is ${isPrime(number) ? '' : 'not '}a prime number`;
                case 'square': 
-                   return `The number is ${isPerfectSquare(number) ? '' : 'not '}a perfect square.`;
+                   return `The number is ${isPerfectSquare(number) ? '' : 'not '}a perfect square`;
                case 'fibonacci': 
-                   return `The number is ${fibonacciNumbers.has(number) ? '' : 'not '}a Fibonacci number.`;
+                   return `The number is ${fibonacciNumbers.has(number) ? '' : 'not '}a Fibonacci number`;
                case 'div7': 
-                   return `The number is ${number % 7 === 0 ? '' : 'not '}divisible by 7.`;
+                   return `The number is ${number % 7 === 0 ? '' : 'not '}divisible by 7`;
                case 'tens': 
-                   return `The tens digit is ${getTensDigit(number) % 2 === 0 ? 'even' : 'odd'}.`;
+                   return `The tens digit is ${getTensDigit(number) % 2 === 0 ? 'even' : 'odd'}`;
                default: 
                    return '';
-           }
-       }
-
-       function getClueDisplayName(clueType) {
-           switch (clueType) {
-               case 'range': return 'Range';
-               case 'parity': return 'Parity';
-               case 'div3': return 'Divisible by 3';
-               case 'div5': return 'Divisible by 5';
-               case 'prime': return 'Prime Number';
-               case 'square': return 'Perfect Square';
-               case 'fibonacci': return 'Fibonacci Number';
-               case 'div7': return 'Divisible by 7';
-               case 'tens': return 'Tens Digit Parity';
-               default: return '';
            }
        }
 
@@ -733,8 +734,8 @@
                    clueResult = `The number is ${direction} than ${guess}.`;
                    historyEntry += ` | Range: ${direction}`;
                } else if (clueType) {
-                   clueResult = getClue(secretNumber, clueType);
-                   historyEntry += ` | ${getClueDisplayName(clueType)}: ${getClue(secretNumber, clueType)}`;
+                   clueResult = getClue(secretNumber, clueType) + '.';
+                   historyEntry += ` | ${getClue(secretNumber, clueType)}`;
                } else {
                    clueResult = 'No clue used.';
                    historyEntry += ` | No clue used`;
