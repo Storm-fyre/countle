@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Countle</title>
+</head>
+<body>
+    <div id="intro-container">
+        <h1>🎯 Welcome to Countle</h1>
+        <p class="tagline">The strategic number guessing game</p>
+        
+        <div class="game-overview">
+            <h2>How to Play</h2>
+            <div class="rules">
+                <div class="rule-item">
+                    <span class="rule-number">1</span>
+                    <div class="rule-content">
+                        <h3>Guess the Number</h3>
+                        <p>A secret number between 1-99 is chosen. You have <strong>7 guesses</strong> to find it.</p>
+                    </div>
+                </div>
+                
+                <div class="rule-item">
+                    <span class="rule-number">2</span>
+                    <div class="rule-content">
+                        <h3>Choose Your Clues</h3>
+                        <p>With each guess, select a clue to help narrow down the number:</p>
+                        <ul class="clue-list">
+                            <li><strong>Range (3 uses):</strong> Higher/Lower feedback</li>
+                            <li><strong>Math clues:</strong> Even/Odd, Prime, Perfect Square, Fibonacci</li>
+                            <li><strong>Divisibility:</strong> By 3, 5, or 7</li>
+                            <li><strong>Tens digit:</strong> Even/Odd tens place</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="rule-item">
+                    <span class="rule-number">3</span>
+                    <div class="rule-content">
+                        <h3>Strategic Choices</h3>
+                        <p>Each clue type can only be used <strong>once</strong> (except Range). Choose wisely!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <h3>Example Turn</h3>
+            <div class="example-box">
+                <p><strong>Your guess:</strong> 42</p>
+                <p><strong>Clue chosen:</strong> Divisible by 3</p>
+                <p><strong>Result:</strong> "The number is not divisible by 3"</p>
+                <p class="example-note">Now you know to avoid multiples of 3!</p>
+            </div>
+        </div>
+        
+        <div class="daily-info">
+            <h3>Daily Challenge</h3>
+            <p>Everyone gets the same number each day. Come back tomorrow for a new challenge!</p>
+        </div>
+        
+        <div class="start-buttons">
+            <button onclick="startGame()" class="start-btn primary">🎯 Start Game</button>
+        </div>
+    </div>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #intro-container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .tagline {
+            color: #718096;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .game-overview {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .game-overview h2 {
+            color: #2d3748;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .rules {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #3182ce;
+        }
+
+        .rule-number {
+            background: #3182ce;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .rule-content h3 {
+            color: #2d3748;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .rule-content p {
+            color: #4a5568;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .clue-list {
+            margin-left: 20px;
+            color: #4a5568;
+        }
+
+        .clue-list li {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .example-section {
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .example-section h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        .example-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: left;
+            border: 2px solid #38a169;
+        }
+
+        .example-box p {
+            color: #4a5568;
+            margin-bottom: 5px;
+        }
+
+        .example-note {
+            color: #38a169 !important;
+            font-style: italic;
+            margin-top: 10px !important;
+        }
+
+        .daily-info {
+            background: #fef5e7;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 2px solid #ed8936;
+        }
+
+        .daily-info h3 {
+            color: #c05621;
+            margin-bottom: 10px;
+        }
+
+        .daily-info p {
+            color: #744210;
+            font-weight: 500;
+        }
+
+        .start-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .start-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .start-btn.primary {
+            background: #38a169;
+            color: white;
+            box-shadow: 0 4px 15px rgba(56, 161, 105, 0.3);
+        }
+
+        .start-btn.primary:hover {
+            background: #2f855a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 161, 105, 0.4);
+        }
+
+        .start-btn.secondary {
+            background: #805ad5;
+            color: white;
+            box-shadow: 0 4px 15px rgba(128, 90, 213, 0.3);
+        }
+
+        .start-btn.secondary:hover {
+            background: #6b46c1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(128, 90, 213, 0.4);
+        }
+
+        @media (max-width: 600px) {
+            #intro-container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .rule-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .start-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .start-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+
+    <script>
+        function startGame() {
+            // Replace this with navigation to your main game
+            alert('Starting game! (Replace this with actual navigation to your game)');
+            // window.location.href = 'game.html';
+        }
+    </script>
+</body>
+</html>

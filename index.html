@@ -1,12 +1,617 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Countle</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countle</title>
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.5s ease;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+
+        /* Intro Container Styles */
+        #intro-container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        #intro-container h1 {
+            color: #2d3748;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .tagline {
+            color: #718096;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .game-overview {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .game-overview h2 {
+            color: #2d3748;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .rules {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .rule-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #3182ce;
+        }
+
+        .rule-number {
+            background: #3182ce;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        
+        .rule-content h3 {
+            color: #2d3748;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .rule-content p {
+            color: #4a5568;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .clue-list {
+            margin-left: 20px;
+            color: #4a5568;
+        }
+
+        .clue-list li {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+        
+        .example-section {
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .example-section h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+        
+        .example-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: left;
+            border: 2px solid #38a169;
+        }
+
+        .example-box p {
+            color: #4a5568;
+            margin-bottom: 5px;
+        }
+        
+        .example-note {
+            color: #38a169 !important;
+            font-style: italic;
+            margin-top: 10px !important;
+        }
+
+        .daily-info {
+            background: #fef5e7;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 2px solid #ed8936;
+        }
+        
+        .daily-info h3 {
+            color: #c05621;
+            margin-bottom: 10px;
+        }
+
+        .daily-info p {
+            color: #744210;
+            font-weight: 500;
+        }
+
+        .start-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .start-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+        
+        .start-btn.primary {
+            background: #38a169;
+            color: white;
+            box-shadow: 0 4px 15px rgba(56, 161, 105, 0.3);
+        }
+
+        .start-btn.primary:hover {
+            background: #2f855a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 161, 105, 0.4);
+        }
+
+        /* Game Container Styles */
+        #game-container {
+            max-width: 700px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e5e9;
+        }
+
+        #game-container h1 {
+            color: #2d3748;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: 700;
+        }
+        
+        #daily-challenge-info {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .challenge-date {
+            color: #4a5568;
+            font-size: 1.1rem;
+            font-weight: 500;
+            background: #edf2f7;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .subtitle {
+            color: #718096;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .game-status {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .status-item {
+            background: #3182ce;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(49, 130, 206, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .range-status {
+            background: #38a169;
+            box-shadow: 0 2px 8px rgba(56, 161, 105, 0.2);
+        }
+        
+        .label {
+            font-size: 0.9rem;
+        }
+
+        .counter {
+            font-size: 1.3rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 10px;
+            border-radius: 8px;
+            min-width: 35px;
+            text-align: center;
+        }
+        
+        .range-tracker {
+            display: flex;
+            gap: 8px;
+        }
+
+        .range-dot {
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .range-dot.available {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .range-dot.used {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .input-section {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .guess-input, .clue-select {
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .guess-input {
+            width: 160px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .clue-select {
+            min-width: 220px;
+            cursor: pointer;
+        }
+
+        .guess-input:focus, .clue-select:focus {
+            outline: none;
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+        }
+
+        .guess-btn {
+            background: #38a169;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(56, 161, 105, 0.2);
+        }
+        
+        .guess-btn:hover {
+            background: #2f855a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(56, 161, 105, 0.3);
+        }
+
+        .guess-btn:active {
+            transform: translateY(0);
+        }
+        
+        .guess-btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .message {
+            background: #f7fafc;
+            color: #4a5568;
+            padding: 18px 24px;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-weight: 500;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1.05rem;
+            line-height: 1.4;
+        }
+        
+        .message.success {
+            background: #f0fff4;
+            color: #22543d;
+            border-color: #38a169;
+        }
+
+        .message.error {
+            background: #fed7d7;
+            color: #742a2a;
+            border-color: #e53e3e;
+        }
+
+        .history-section {
+            margin-bottom: 25px;
+        }
+        
+        .history-title {
+            color: #4a5568;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        #history-content {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        
+        .history-section.hidden {
+            display: none;
+        }
+
+        .guess-entry {
+            background: #f7fafc;
+            margin: 10px 0;
+            padding: 14px 18px;
+            border-radius: 8px;
+            border-left: 4px solid #3182ce;
+            font-size: 0.95rem;
+            color: #4a5568;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            line-height: 1.4;
+        }
+        
+        .guess-entry:hover {
+            transform: translateX(2px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .guess-entry.range-entry {
+            border-left-color: #38a169;
+        }
+        
+        .completion-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .completion-screen.hidden {
+            display: none;
+        }
+
+        .completion-content h2 {
+            color: #2d3748;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        #completion-stats {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #e2e8f0;
+        }
+        
+        #completion-stats p {
+            color: #4a5568;
+            font-size: 1.1rem;
+            margin: 8px 0;
+            font-weight: 500;
+        }
+
+        #completion-stats span {
+            color: #2d3748;
+            font-weight: 700;
+        }
+        
+        .completion-message {
+            color: #718096;
+            font-size: 1.1rem;
+            margin: 20px 0;
+        }
+
+        .practice-btn {
+            background: #805ad5;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(128, 90, 213, 0.2);
+        }
+        
+        .practice-btn:hover {
+            background: #6b46c1;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(128, 90, 213, 0.3);
+        }
+
+        .clue-select option:disabled {
+            color: #a0aec0;
+            background: #f7fafc;
+        }
+        
+        /* Media Queries */
+        @media (max-width: 600px) {
+            #intro-container {
+                padding: 25px;
+            }
+            #intro-container h1 {
+                font-size: 2.2rem;
+            }
+            .rule-item {
+                gap: 15px;
+            }
+            .start-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .start-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            .input-section {
+                flex-direction: column;
+                align-items: center;
+            }
+            .guess-input, .clue-select {
+                width: 100%;
+                max-width: 300px;
+            }
+            .game-status {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            #completion-stats {
+                margin: 15px 0;
+            }
+        }
+
+        /* Scrollbar Styling */
+        #history-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        #history-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        #history-content::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        #history-content::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
 </head>
 <body>
-   <div id="game-container">
+    <!-- Intro Screen -->
+    <div id="intro-container">
+        <h1>🎯 Welcome to Countle</h1>
+        <p class="tagline">The strategic number guessing game</p>
+        
+        <div class="game-overview">
+            <h2>How to Play</h2>
+            <div class="rules">
+                <div class="rule-item">
+                    <span class="rule-number">1</span>
+                    <div class="rule-content">
+                        <h3>Guess the Number</h3>
+                        <p>A secret number between 1-99 is chosen. You have <strong>7 guesses</strong> to find it.</p>
+                    </div>
+                </div>
+                
+                <div class="rule-item">
+                    <span class="rule-number">2</span>
+                    <div class="rule-content">
+                        <h3>Choose Your Clues</h3>
+                        <p>With each guess, select a clue to help narrow down the number:</p>
+                        <ul class="clue-list">
+                            <li><strong>Range (3 uses):</strong> Higher/Lower feedback</li>
+                            <li><strong>Math clues:</strong> Even/Odd, Prime, Perfect Square, Fibonacci</li>
+                            <li><strong>Divisibility:</strong> By 3, 5, or 7</li>
+                            <li><strong>Tens digit:</strong> Even/Odd tens place</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="rule-item">
+                    <span class="rule-number">3</span>
+                    <div class="rule-content">
+                        <h3>Strategic Choices</h3>
+                        <p>Each clue type can only be used <strong>once</strong> (except Range). Choose wisely!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <h3>Example Turn</h3>
+            <div class="example-box">
+                <p><strong>Your guess:</strong> 42</p>
+                <p><strong>Clue chosen:</strong> Divisible by 3</p>
+                <p><strong>Result:</strong> "The number is not divisible by 3"</p>
+                <p class="example-note">Now you know to avoid multiples of 3!</p>
+            </div>
+        </div>
+        
+        <div class="daily-info">
+            <h3>Daily Challenge</h3>
+            <p>Everyone gets the same number each day. Come back tomorrow for a new challenge!</p>
+        </div>
+        
+        <div class="start-buttons">
+            <button onclick="startGame()" class="start-btn primary">🎯 Start Game</button>
+        </div>
+    </div>
+    
+    <!-- Game Screen -->
+    <div id="game-container" class="hidden">
        <h1>🎯 Countle</h1>
        <div id="daily-challenge-info">
            <p class="challenge-date" id="challenge-header">Today's Challenge: <span id="current-date"></span></p>
@@ -68,749 +673,368 @@
        </div>
    </div>
 
-   <style>
-       * {
-           margin: 0;
-           padding: 0;
-           box-sizing: border-box;
-       }
-
-       body {
-           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-           background: #f0f2f5;
-           min-height: 100vh;
-           padding: 20px;
-           display: flex;
-           align-items: center;
-           justify-content: center;
-       }
-
-       #game-container {
-           max-width: 700px;
-           width: 100%;
-           background: white;
-           padding: 30px;
-           border-radius: 16px;
-           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-           border: 1px solid #e1e5e9;
-       }
-
-       h1 {
-           color: #2d3748;
-           font-size: 2.5rem;
-           margin-bottom: 10px;
-           text-align: center;
-           font-weight: 700;
-       }
-
-       #daily-challenge-info {
-           text-align: center;
-           margin-bottom: 25px;
-       }
-
-       .challenge-date {
-           color: #4a5568;
-           font-size: 1.1rem;
-           font-weight: 500;
-           background: #edf2f7;
-           padding: 8px 16px;
-           border-radius: 20px;
-           display: inline-block;
-       }
-
-       .subtitle {
-           color: #718096;
-           font-size: 1.1rem;
-           margin-bottom: 25px;
-           text-align: center;
-       }
-
-       .game-status {
-           display: flex;
-           justify-content: center;
-           gap: 30px;
-           margin-bottom: 25px;
-           flex-wrap: wrap;
-       }
-
-       .status-item {
-           background: #3182ce;
-           color: white;
-           padding: 12px 20px;
-           border-radius: 12px;
-           font-weight: 600;
-           box-shadow: 0 2px 8px rgba(49, 130, 206, 0.2);
-           display: flex;
-           align-items: center;
-           gap: 10px;
-       }
-
-       .range-status {
-           background: #38a169;
-           box-shadow: 0 2px 8px rgba(56, 161, 105, 0.2);
-       }
-
-       .label {
-           font-size: 0.9rem;
-       }
-
-       .counter {
-           font-size: 1.3rem;
-           background: rgba(255, 255, 255, 0.2);
-           padding: 4px 10px;
-           border-radius: 8px;
-           min-width: 35px;
-           text-align: center;
-       }
-
-       .range-tracker {
-           display: flex;
-           gap: 8px;
-       }
-
-       .range-dot {
-           font-size: 1.5rem;
-           transition: all 0.3s ease;
-       }
-
-       .range-dot.available {
-           color: rgba(255, 255, 255, 0.9);
-       }
-
-       .range-dot.used {
-           color: rgba(255, 255, 255, 0.3);
-       }
-
-       .input-section {
-           display: flex;
-           gap: 12px;
-           margin-bottom: 25px;
-           flex-wrap: wrap;
-           justify-content: center;
-       }
-
-       .guess-input, .clue-select {
-           padding: 14px 18px;
-           border: 2px solid #e2e8f0;
-           border-radius: 8px;
-           font-size: 1rem;
-           transition: all 0.3s ease;
-           background: white;
-       }
-
-       .guess-input {
-           width: 160px;
-           text-align: center;
-           font-weight: 600;
-           font-size: 1.1rem;
-       }
-
-       .clue-select {
-           min-width: 220px;
-           cursor: pointer;
-       }
-
-       .guess-input:focus, .clue-select:focus {
-           outline: none;
-           border-color: #3182ce;
-           box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
-       }
-
-       .guess-btn {
-           background: #38a169;
-           color: white;
-           border: none;
-           padding: 14px 28px;
-           border-radius: 8px;
-           font-size: 1.1rem;
-           font-weight: 600;
-           cursor: pointer;
-           transition: all 0.3s ease;
-           box-shadow: 0 2px 8px rgba(56, 161, 105, 0.2);
-       }
-
-       .guess-btn:hover {
-           background: #2f855a;
-           transform: translateY(-1px);
-           box-shadow: 0 4px 12px rgba(56, 161, 105, 0.3);
-       }
-
-       .guess-btn:active {
-           transform: translateY(0);
-       }
-
-       .guess-btn:disabled {
-           background: #a0aec0;
-           cursor: not-allowed;
-           transform: none;
-           box-shadow: none;
-       }
-
-       .message {
-           background: #f7fafc;
-           color: #4a5568;
-           padding: 18px 24px;
-           border: 2px solid #cbd5e0;
-           border-radius: 8px;
-           margin-bottom: 25px;
-           font-weight: 500;
-           min-height: 60px;
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           text-align: center;
-           font-size: 1.05rem;
-           line-height: 1.4;
-       }
-
-       .message.success {
-           background: #f0fff4;
-           color: #22543d;
-           border-color: #38a169;
-       }
-
-       .message.error {
-           background: #fed7d7;
-           color: #742a2a;
-           border-color: #e53e3e;
-       }
-
-       .history-section {
-           margin-bottom: 25px;
-       }
-
-       .history-title {
-           color: #4a5568;
-           font-size: 1.3rem;
-           margin-bottom: 15px;
-           text-align: left;
-           font-weight: 600;
-       }
-
-       #history-content {
-           max-height: 350px;
-           overflow-y: auto;
-       }
-       .history-section.hidden {
-           display: none;
-       }
-
-       .guess-entry {
-           background: #f7fafc;
-           margin: 10px 0;
-           padding: 14px 18px;
-           border-radius: 8px;
-           border-left: 4px solid #3182ce;
-           font-size: 0.95rem;
-           color: #4a5568;
-           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-           transition: all 0.2s ease;
-           line-height: 1.4;
-       }
-
-       .guess-entry:hover {
-           transform: translateX(2px);
-           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-       }
-
-       .guess-entry.range-entry {
-           border-left-color: #38a169;
-       }
-
-       .completion-screen {
-           text-align: center;
-           padding: 40px 20px;
-       }
-
-       .completion-screen.hidden {
-           display: none;
-       }
-
-       .completion-content h2 {
-           color: #2d3748;
-           font-size: 2rem;
-           margin-bottom: 20px;
-           font-weight: 700;
-       }
-
-       #completion-stats {
-           background: #f7fafc;
-           padding: 20px;
-           border-radius: 8px;
-           margin: 20px 0;
-           border: 1px solid #e2e8f0;
-       }
-
-       #completion-stats p {
-           color: #4a5568;
-           font-size: 1.1rem;
-           margin: 8px 0;
-           font-weight: 500;
-       }
-
-       #completion-stats span {
-           color: #2d3748;
-           font-weight: 700;
-       }
-
-       .completion-message {
-           color: #718096;
-           font-size: 1.1rem;
-           margin: 20px 0;
-       }
-
-       .practice-btn {
-           background: #805ad5;
-           color: white;
-           border: none;
-           padding: 14px 32px;
-           border-radius: 8px;
-           font-size: 1.1rem;
-           font-weight: 600;
-           cursor: pointer;
-           transition: all 0.3s ease;
-           box-shadow: 0 2px 8px rgba(128, 90, 213, 0.2);
-       }
-
-       .practice-btn:hover {
-           background: #6b46c1;
-           transform: translateY(-1px);
-           box-shadow: 0 4px 12px rgba(128, 90, 213, 0.3);
-       }
-
-       .hidden {
-           display: none;
-       }
-
-       .clue-select option:disabled {
-           color: #a0aec0;
-           background: #f7fafc;
-       }
-
-       @media (max-width: 600px) {
-           .input-section {
-               flex-direction: column;
-               align-items: center;
-           }
-           
-           .guess-input, .clue-select {
-               width: 100%;
-               max-width: 300px;
-           }
-
-           .game-status {
-               flex-direction: column;
-               align-items: center;
-               gap: 15px;
-           }
-
-           #completion-stats {
-               margin: 15px 0;
-           }
-       }
-
-       /* Scrollbar styling */
-       #history-content::-webkit-scrollbar {
-           width: 6px;
-       }
-
-       #history-content::-webkit-scrollbar-track {
-           background: #f1f1f1;
-           border-radius: 3px;
-       }
-
-       #history-content::-webkit-scrollbar-thumb {
-           background: #c1c1c1;
-           border-radius: 3px;
-       }
-
-       #history-content::-webkit-scrollbar-thumb:hover {
-           background: #a8a8a8;
-       }
-   </style>
-
-   <script>
-       let secretNumber;
-       let guessesLeft = 7;
-       let rangeCluesLeft = 3;
-       let usedClues = new Set();
-       let history = [];
-       let noClueWarningShown = false;
-       let guessCount = 0;
-       let isPracticeMode = false;
-       let dailyCompleted = false;
-       let dailyWon = false;
-
-       const fibonacciNumbers = new Set([1, 2, 3, 5, 8, 13, 21, 34, 55, 89]);
-
-       // SHA-256 implementation
-       function sha256(message) {
-           const msgBuffer = new TextEncoder().encode(message);
-           return crypto.subtle.digest('SHA-256', msgBuffer).then(hashBuffer => {
-               const hashArray = Array.from(new Uint8Array(hashBuffer));
-               return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-           });
-       }
-
-       // Generate daily number based on date
-       async function getDailyNumber() {
-           const today = new Date();
-           const dateStr = String(today.getDate()).padStart(2, '0') + 
-                          String(today.getMonth() + 1).padStart(2, '0') + 
-                          today.getFullYear();
-           
-           const hash = await sha256(dateStr);
-           const firstTwoChars = hash.substring(0, 2);
-           const hashValue = parseInt(firstTwoChars, 16);
-           return (hashValue % 99) + 1;
-       }
-
-       // Format date for display
-       function formatDate() {
-           const today = new Date();
-           const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-           return today.toLocaleDateString('en-GB', options);
-       }
-
-       // Load game state from localStorage
-       function loadGameState() {
-           const today = new Date().toDateString();
-           const savedState = localStorage.getItem('countle_daily_state');
-           
-           if (savedState) {
-               const state = JSON.parse(savedState);
-               if (state.date === today) {
-                   return state;
-               }
-           }
-           return null;
-       }
-
-       // Save game state to localStorage
-       function saveGameState() {
-           const today = new Date().toDateString();
-           const state = {
-               date: today,
-               secretNumber: secretNumber,
-               guessesLeft: guessesLeft,
-               rangeCluesLeft: rangeCluesLeft,
-               usedClues: Array.from(usedClues),
-               history: history,
-               guessCount: guessCount,
-               dailyCompleted: dailyCompleted,
-               dailyWon: dailyWon,
-               isPracticeMode: isPracticeMode
-           };
-           localStorage.setItem('countle_daily_state', JSON.stringify(state));
-       }
-
-       // Initialize game
-       async function initGame() {
-           // Set current date
-           document.getElementById('current-date').textContent = formatDate();
-           
-           const savedState = loadGameState();
-           
-           if (savedState) {
-               // Restore saved state
-               secretNumber = savedState.secretNumber;
-               guessesLeft = savedState.guessesLeft;
-               rangeCluesLeft = savedState.rangeCluesLeft;
-               usedClues = new Set(savedState.usedClues);
-               history = savedState.history;
-               guessCount = savedState.guessCount;
-               dailyCompleted = savedState.dailyCompleted;
-               dailyWon = savedState.dailyWon !== undefined ? savedState.dailyWon : false;
-               isPracticeMode = savedState.isPracticeMode;
-               
-               if (dailyCompleted) {
-                   showCompletionScreen(dailyWon);
-               } else {
-                   updateUI();
-                   // Show history immediately if there are previous guesses
-                   if (history.length > 0) {
-                       document.getElementById('history').classList.remove('hidden');
-                   }
-                   
-                   if (isPracticeMode) {
-                       document.getElementById('challenge-header').textContent = 'Practice Mode';
-                   }
-                   
-                   // Set appropriate message based on game state
-                   if (guessCount === 0) {
-                       document.getElementById('message').textContent = 'Make your first guess! You have 7 guesses including 3 range clues.';
-                   } else {
-                       document.getElementById('message').textContent = `Continue guessing! You have ${guessesLeft} guesses left.`;
-                   }
-               }
-           } else {
-               // Start new daily challenge
-               secretNumber = await getDailyNumber();
-               startNewGame();
-           }
-       }
-
-       function startNewGame() {
-           guessesLeft = 7;
-           rangeCluesLeft = 3;
-           usedClues.clear();
-           history = [];
-           noClueWarningShown = false;
-           guessCount = 0;
-           
-           document.getElementById('guess-input').value = '';
-           document.getElementById('guess-input').disabled = false;
-           document.getElementById('clue-select').selectedIndex = 0;
-           document.getElementById('clue-select').disabled = false;
-           document.querySelector('.guess-btn').disabled = false;
-           
-           document.getElementById('message').textContent = 'Make your first guess! You have 7 guesses including 3 range clues.';
-           document.getElementById('message').className = 'message';
-           document.getElementById('history-content').innerHTML = '';
-           document.getElementById('history').classList.add('hidden');           
-           updateUI();
-           
-           if (!isPracticeMode) {
-               document.getElementById('challenge-header').innerHTML = 'Today\'s Challenge: <span id="current-date"></span>';
-               document.getElementById('current-date').textContent = formatDate();
-           }
-       }
-
-       function updateUI() {
-           document.getElementById('guesses-counter').textContent = guessesLeft;
-           updateRangeDisplay();
-           updateClueOptions();
-           
-           // Restore history immediately
-           if (history.length > 0) {
-               document.getElementById('history-content').innerHTML = history.join('');
-               document.getElementById('history').classList.remove('hidden');
-           }
-           
-           // Show game screen, hide completion screen
-           document.getElementById('game-screen').classList.remove('hidden');
-           document.getElementById('completion-screen').classList.add('hidden');
-       }
-
-       function updateRangeDisplay() {
-           for (let i = 1; i <= 3; i++) {
-               const dot = document.getElementById(`range-dot-${i}`);
-               if (i <= rangeCluesLeft) {
-                   dot.className = 'range-dot available';
-               } else {
-                   dot.className = 'range-dot used';
-               }
-           }
-       }
-
-       function isPrime(n) {
-           if (n < 2) return false;
-           if (n === 2) return true;
-           if (n % 2 === 0) return false;
-           for (let i = 3; i <= Math.sqrt(n); i += 2) {
-               if (n % i === 0) return false;
-           }
-           return true;
-       }
-
-       function isPerfectSquare(n) {
-           let root = Math.sqrt(n);
-           return root === Math.floor(root);
-       }
-
-       function getTensDigit(n) {
-           return Math.floor(n / 10);
-       }
-
-       function getClue(number, clueType) {
-           switch (clueType) {
-               case 'parity': 
-                   return `The number is ${number % 2 === 0 ? 'even' : 'odd'}`;
-               case 'div3': 
-                   return `The number is ${number % 3 === 0 ? '' : 'not '}divisible by 3`;
-               case 'div5': 
-                   return `The number is ${number % 5 === 0 ? '' : 'not '}divisible by 5`;
-               case 'prime': 
-                   return `The number is ${isPrime(number) ? '' : 'not '}a prime number`;
-               case 'square': 
-                   return `The number is ${isPerfectSquare(number) ? '' : 'not '}a perfect square`;
-               case 'fibonacci': 
-                   return `The number is ${fibonacciNumbers.has(number) ? '' : 'not '}a Fibonacci number`;
-               case 'div7': 
-                   return `The number is ${number % 7 === 0 ? '' : 'not '}divisible by 7`;
-               case 'tens': 
-                   return `The tens digit is ${getTensDigit(number) % 2 === 0 ? 'even' : 'odd'}`;
-               default: 
-                   return '';
-           }
-       }
-
-       function updateClueOptions() {
-           const select = document.getElementById('clue-select');
-           Array.from(select.options).forEach(option => {
-               if (option.value === 'range') {
-                   option.disabled = rangeCluesLeft === 0;
-               } else if (option.value && usedClues.has(option.value)) {
-                   option.disabled = true;
-               } else if (option.value) {
-                   option.disabled = false;
-               }
-           });
-       }
-
-       function submitGuess() {
-           const guess = parseInt(document.getElementById('guess-input').value);
-           const clueType = document.getElementById('clue-select').value;
-
-           if (!guess || guess < 1 || guess > 99) {
-               const messageEl = document.getElementById('message');
-               messageEl.textContent = 'Please enter a number between 1 and 99.';
-               messageEl.className = 'message error';
-               return;
-           }
-
-           // Handle no clue selected
-           if (!clueType) {
-               if (!noClueWarningShown) {
-                   const messageEl = document.getElementById('message');
-                   messageEl.textContent = 'No clue selected. Press "Guess" again to continue without a clue.';
-                   messageEl.className = 'message error';
-                   noClueWarningShown = true;
-                   return;
-               }
-               noClueWarningShown = false;
-           } else {
-               noClueWarningShown = false;
-               
-               // Check if clue is available
-               if (clueType === 'range' && rangeCluesLeft === 0) {
-                   const messageEl = document.getElementById('message');
-                   messageEl.textContent = 'No range clues remaining! Please select a different clue.';
-                   messageEl.className = 'message error';
-                   return;
-               }
-               
-               if (clueType !== 'range' && usedClues.has(clueType)) {
-                   const messageEl = document.getElementById('message');
-                   messageEl.textContent = 'This clue has already been used. Please select an available clue.';
-                   messageEl.className = 'message error';
-                   return;
-               }
-           }
-
-           // Process the guess
-           guessesLeft--;
-           guessCount++;
-           if (clueType === 'range') {
-               rangeCluesLeft--;
-           } else if (clueType) {
-               usedClues.add(clueType);
-           }
-
-           document.getElementById('guesses-counter').textContent = guessesLeft;
-           updateRangeDisplay();
-
-           const messageEl = document.getElementById('message');
-           let historyEntry = `Guess ${guessCount}: ${guess}`;
-           
-           if (guess === secretNumber) {
-               messageEl.textContent = `🎉 Congratulations! You guessed the number ${secretNumber} correctly!`;
-               messageEl.className = 'message success';
-               historyEntry += ` | ✅ CORRECT!`;
-               
-               // Game won
-               if (!isPracticeMode) {
-                   dailyCompleted = true;
-                   dailyWon = true;
-                   saveGameState();
-                   setTimeout(() => showCompletionScreen(true), 2000);
-               } else {
-                   document.getElementById('guess-input').disabled = true;
-                   document.getElementById('clue-select').disabled = true;
-                   document.querySelector('.guess-btn').disabled = true;
-               }
-           } else {
-               let clueResult = '';
-               let direction = '';
-               
-               if (clueType === 'range') {
-                   direction = guess < secretNumber ? 'higher' : 'lower';
-                   clueResult = `The number is ${direction} than ${guess}.`;
-                   historyEntry += ` | Range: ${direction}`;
-               } else if (clueType) {
-                   clueResult = getClue(secretNumber, clueType) + '.';
-                   historyEntry += ` | ${getClue(secretNumber, clueType)}`;
-               } else {
-                   clueResult = 'No clue used.';
-                   historyEntry += ` | No clue used`;
-               }
-               
-               if (guessesLeft === 0) {
-                   messageEl.textContent = `💥 Game Over! The number was ${secretNumber}.`;
-                   messageEl.className = 'message error';
-                   
-                   // Game lost
-                   if (!isPracticeMode) {
-                       dailyCompleted = true;
-                       dailyWon = false;
-                       saveGameState();
-                       setTimeout(() => showCompletionScreen(false), 2000);
-                   } else {
-                       document.getElementById('guess-input').disabled = true;
-                       document.getElementById('clue-select').disabled = true;
-                       document.querySelector('.guess-btn').disabled = true;
-                   }
-               } else {
-                   messageEl.textContent = clueResult;
-                   messageEl.className = 'message';
-               }
-           }
-
-           // Add to history
-           const entryClass = clueType === 'range' ? 'guess-entry range-entry' : 'guess-entry';
-           history.unshift(`<div class="${entryClass}">${historyEntry}</div>`);
-           document.getElementById('history').classList.remove('hidden');
-           document.getElementById('history-content').innerHTML = history.join('');
-           
-           updateClueOptions();
-           
-           // Save state if not practice mode
-           if (!isPracticeMode) {
-               saveGameState();
-           }
-           
-           // Clear inputs for next guess
-           document.getElementById('guess-input').value = '';
-           document.getElementById('clue-select').selectedIndex = 0;
-       }
-
-       function showCompletionScreen(won) {
-           document.getElementById('game-screen').classList.add('hidden');
-           document.getElementById('completion-screen').classList.remove('hidden');
-           
-           document.getElementById('completion-title').textContent = won ? '🎉 Congratulations!' : '💥 Game Over!';
-           document.getElementById('completion-number').textContent = secretNumber;
-           document.getElementById('completion-guesses').textContent = guessCount;
-       }
-
-       async function startPracticeMode() {
-           isPracticeMode = true;
-           secretNumber = Math.floor(Math.random() * 99) + 1;
-           startNewGame();
-           document.getElementById('challenge-header').textContent = 'Practice Mode';
-       }
-
-       // Allow Enter key to submit guess
-       document.addEventListener('DOMContentLoaded', function() {
-           document.getElementById('guess-input').addEventListener('keypress', function(e) {
-               if (e.key === 'Enter') {
-                   submitGuess();
-               }
-           });
-           
-           // Initialize game on page load
-           initGame();
-       });
-   </script>
+    <script>
+        // --- Game State Variables ---
+        let secretNumber;
+        let guessesLeft = 7;
+        let rangeCluesLeft = 3;
+        let usedClues = new Set();
+        let history = [];
+        let noClueWarningShown = false;
+        let guessCount = 0;
+        let isPracticeMode = false;
+        let dailyCompleted = false;
+        let dailyWon = false;
+
+        const fibonacciNumbers = new Set([1, 2, 3, 5, 8, 13, 21, 34, 55, 89]);
+
+        // --- Core Functions ---
+        
+        // SHA-256 implementation
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Generate daily number based on date
+        async function getDailyNumber() {
+            const today = new Date();
+            const dateStr = String(today.getDate()).padStart(2, '0') + 
+                           String(today.getMonth() + 1).padStart(2, '0') + 
+                           today.getFullYear();
+            
+            const hash = await sha256(dateStr);
+            const firstTwoChars = hash.substring(0, 2);
+            const hashValue = parseInt(firstTwoChars, 16);
+            return (hashValue % 99) + 1;
+        }
+        
+        // Format date for display
+        function formatDate() {
+            const today = new Date();
+            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            return today.toLocaleDateString('en-GB', options);
+        }
+
+        // Load game state from localStorage
+        function loadGameState() {
+            const today = new Date().toDateString();
+            const savedState = localStorage.getItem('countle_daily_state');
+            
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                if (state.date === today) {
+                    return state;
+                }
+            }
+            return null;
+        }
+
+        // Save game state to localStorage
+        function saveGameState() {
+            const today = new Date().toDateString();
+            const state = {
+                date: today,
+                secretNumber: secretNumber,
+                guessesLeft: guessesLeft,
+                rangeCluesLeft: rangeCluesLeft,
+                usedClues: Array.from(usedClues),
+                history: history,
+                guessCount: guessCount,
+                dailyCompleted: dailyCompleted,
+                dailyWon: dailyWon,
+                isPracticeMode: isPracticeMode
+            };
+            localStorage.setItem('countle_daily_state', JSON.stringify(state));
+        }
+        
+        // --- Intro and Game Initialization ---
+        
+        function startGame() {
+            const todayStr = new Date().toDateString();
+            localStorage.setItem('lastIntroSeen', todayStr);
+            
+            document.getElementById('intro-container').classList.add('hidden');
+            document.getElementById('game-container').classList.remove('hidden');
+            document.body.style.background = '#f0f2f5';
+            
+            initGame();
+        }
+
+        async function initializeApp() {
+            const todayStr = new Date().toDateString();
+            const lastIntroSeen = localStorage.getItem('lastIntroSeen');
+            
+            if (lastIntroSeen === todayStr) {
+                // Intro already seen today, show game directly
+                document.getElementById('intro-container').classList.add('hidden');
+                document.getElementById('game-container').classList.remove('hidden');
+                await initGame();
+            } else {
+                // First time today, show intro
+                document.getElementById('game-container').classList.add('hidden');
+                document.getElementById('intro-container').classList.remove('hidden');
+                document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            }
+        }
+        
+        // Initialize game logic (called after intro is dismissed)
+        async function initGame() {
+            document.getElementById('current-date').textContent = formatDate();
+            
+            const savedState = loadGameState();
+            
+            if (savedState) {
+                // Restore saved state
+                secretNumber = savedState.secretNumber;
+                guessesLeft = savedState.guessesLeft;
+                rangeCluesLeft = savedState.rangeCluesLeft;
+                usedClues = new Set(savedState.usedClues);
+                history = savedState.history;
+                guessCount = savedState.guessCount;
+                dailyCompleted = savedState.dailyCompleted;
+                dailyWon = savedState.dailyWon !== undefined ? savedState.dailyWon : false;
+                isPracticeMode = savedState.isPracticeMode;
+                
+                if (dailyCompleted) {
+                    showCompletionScreen(dailyWon);
+                } else {
+                    updateUI();
+                    if (history.length > 0) {
+                        document.getElementById('history').classList.remove('hidden');
+                    }
+                    if (isPracticeMode) {
+                        document.getElementById('challenge-header').textContent = 'Practice Mode';
+                    }
+                    if (guessCount === 0) {
+                        document.getElementById('message').textContent = 'Make your first guess!';
+                    } else {
+                        document.getElementById('message').textContent = `Continue guessing! You have ${guessesLeft} guesses left.`;
+                    }
+                }
+            } else {
+                // Start new daily challenge
+                secretNumber = await getDailyNumber();
+                startNewGame();
+            }
+        }
+        
+        function startNewGame() {
+            guessesLeft = 7;
+            rangeCluesLeft = 3;
+            usedClues.clear();
+            history = [];
+            noClueWarningShown = false;
+            guessCount = 0;
+            
+            document.getElementById('guess-input').value = '';
+            document.getElementById('guess-input').disabled = false;
+            document.getElementById('clue-select').selectedIndex = 0;
+            document.getElementById('clue-select').disabled = false;
+            document.querySelector('.guess-btn').disabled = false;
+            
+            document.getElementById('message').textContent = 'Make your first guess! You have 7 guesses and 3 range clues.';
+            document.getElementById('message').className = 'message';
+            document.getElementById('history-content').innerHTML = '';
+            document.getElementById('history').classList.add('hidden');           
+            updateUI();
+            
+            if (!isPracticeMode) {
+                document.getElementById('challenge-header').innerHTML = 'Today\'s Challenge: <span id="current-date"></span>';
+                document.getElementById('current-date').textContent = formatDate();
+            }
+        }
+        
+        // --- UI Update Functions ---
+        
+        function updateUI() {
+            document.getElementById('guesses-counter').textContent = guessesLeft;
+            updateRangeDisplay();
+            updateClueOptions();
+            
+            if (history.length > 0) {
+                document.getElementById('history-content').innerHTML = history.join('');
+                document.getElementById('history').classList.remove('hidden');
+            }
+            
+            document.getElementById('game-screen').classList.remove('hidden');
+            document.getElementById('completion-screen').classList.add('hidden');
+        }
+
+        function updateRangeDisplay() {
+            for (let i = 1; i <= 3; i++) {
+                const dot = document.getElementById(`range-dot-${i}`);
+                dot.className = i <= rangeCluesLeft ? 'range-dot available' : 'range-dot used';
+            }
+        }
+        
+        function updateClueOptions() {
+            const select = document.getElementById('clue-select');
+            Array.from(select.options).forEach(option => {
+                if (option.value) {
+                    if (option.value === 'range') {
+                        option.disabled = rangeCluesLeft === 0;
+                    } else {
+                        option.disabled = usedClues.has(option.value);
+                    }
+                }
+            });
+        }
+        
+        // --- Clue Logic ---
+        
+        function isPrime(n) {
+            if (n < 2) return false;
+            for (let i = 2; i <= Math.sqrt(n); i++) {
+                if (n % i === 0) return false;
+            }
+            return true;
+        }
+
+        function isPerfectSquare(n) {
+            return Number.isInteger(Math.sqrt(n));
+        }
+
+        function getTensDigit(n) {
+            return Math.floor(n / 10);
+        }
+
+        function getClue(number, clueType) {
+            switch (clueType) {
+                case 'parity': return `The number is ${number % 2 === 0 ? 'even' : 'odd'}`;
+                case 'div3': return `The number is ${number % 3 === 0 ? '' : 'not '}divisible by 3`;
+                case 'div5': return `The number is ${number % 5 === 0 ? '' : 'not '}divisible by 5`;
+                case 'prime': return `The number is ${isPrime(number) ? '' : 'not '}a prime number`;
+                case 'square': return `The number is ${isPerfectSquare(number) ? '' : 'not '}a perfect square`;
+                case 'fibonacci': return `The number is ${fibonacciNumbers.has(number) ? '' : 'not '}a Fibonacci number`;
+                case 'div7': return `The number is ${number % 7 === 0 ? '' : 'not '}divisible by 7`;
+                case 'tens': return `The tens digit is ${getTensDigit(number) % 2 === 0 ? 'even' : 'odd'}`;
+                default: return '';
+            }
+        }
+        
+        // --- Gameplay Functions ---
+        
+        function submitGuess() {
+            const guess = parseInt(document.getElementById('guess-input').value);
+            const clueType = document.getElementById('clue-select').value;
+            const messageEl = document.getElementById('message');
+
+            if (isNaN(guess) || guess < 1 || guess > 99) {
+                messageEl.textContent = 'Please enter a number between 1 and 99.';
+                messageEl.className = 'message error';
+                return;
+            }
+
+            if (!clueType) {
+                if (!noClueWarningShown) {
+                    messageEl.textContent = 'No clue selected. Press "Guess" again to continue without a clue.';
+                    messageEl.className = 'message error';
+                    noClueWarningShown = true;
+                    return;
+                }
+                noClueWarningShown = false;
+            } else {
+                noClueWarningShown = false;
+                if ( (clueType === 'range' && rangeCluesLeft === 0) || (clueType !== 'range' && usedClues.has(clueType)) ) {
+                    messageEl.textContent = 'This clue is not available. Please select another.';
+                    messageEl.className = 'message error';
+                    return;
+                }
+            }
+
+            guessesLeft--;
+            guessCount++;
+            if (clueType === 'range') rangeCluesLeft--;
+            else if (clueType) usedClues.add(clueType);
+
+            updateRangeDisplay();
+            let historyEntry = `Guess ${guessCount}: ${guess}`;
+            
+            if (guess === secretNumber) {
+                messageEl.textContent = `🎉 Congratulations! You guessed the number ${secretNumber} correctly!`;
+                messageEl.className = 'message success';
+                historyEntry += ` | ✅ CORRECT!`;
+                if (!isPracticeMode) {
+                    dailyCompleted = true;
+                    dailyWon = true;
+                    saveGameState();
+                    setTimeout(() => showCompletionScreen(true), 1500);
+                }
+                document.querySelector('.guess-btn').disabled = true;
+                document.getElementById('guess-input').disabled = true;
+
+            } else {
+                let clueResult = '';
+                if (clueType === 'range') {
+                    const direction = guess < secretNumber ? 'higher' : 'lower';
+                    clueResult = `The number is ${direction} than ${guess}.`;
+                    historyEntry += ` | Range: ${direction}`;
+                } else if (clueType) {
+                    clueResult = getClue(secretNumber, clueType) + '.';
+                    historyEntry += ` | ${getClue(secretNumber, clueType)}`;
+                } else {
+                    clueResult = 'No clue used. Guess again!';
+                    historyEntry += ` | No clue used`;
+                }
+
+                if (guessesLeft === 0) {
+                    messageEl.textContent = `💥 Game Over! The number was ${secretNumber}.`;
+                    messageEl.className = 'message error';
+                    if (!isPracticeMode) {
+                        dailyCompleted = true;
+                        dailyWon = false;
+                        saveGameState();
+                        setTimeout(() => showCompletionScreen(false), 1500);
+                    }
+                     document.querySelector('.guess-btn').disabled = true;
+                     document.getElementById('guess-input').disabled = true;
+                } else {
+                    messageEl.textContent = clueResult;
+                    messageEl.className = 'message';
+                }
+            }
+
+            const entryClass = clueType === 'range' ? 'guess-entry range-entry' : 'guess-entry';
+            history.unshift(`<div class="${entryClass}">${historyEntry}</div>`);
+            document.getElementById('history').classList.remove('hidden');
+            document.getElementById('history-content').innerHTML = history.join('');
+            
+            updateClueOptions();
+            if (!isPracticeMode) saveGameState();
+            
+            document.getElementById('guess-input').value = '';
+            document.getElementById('clue-select').selectedIndex = 0;
+        }
+
+        function showCompletionScreen(won) {
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('completion-screen').classList.remove('hidden');
+            
+            document.getElementById('completion-title').textContent = won ? '🎉 Congratulations!' : '💥 Game Over!';
+            document.getElementById('completion-number').textContent = secretNumber;
+            document.getElementById('completion-guesses').textContent = guessCount;
+        }
+
+        async function startPracticeMode() {
+            isPracticeMode = true;
+            secretNumber = Math.floor(Math.random() * 99) + 1;
+            startNewGame();
+            document.getElementById('challenge-header').textContent = 'Practice Mode';
+        }
+
+        // Event Listener for Enter key and initial load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('guess-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    submitGuess();
+                }
+            });
+            
+            initializeApp();
+        });
+    </script>
 </body>
 </html>
